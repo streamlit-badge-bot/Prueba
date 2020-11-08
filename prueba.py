@@ -1,7 +1,6 @@
 import streamlit as st
 import streamlit.components.v1 as components
 import pandas as pd
-import altair as alt
 import numpy as np
 import matplotlib.pyplot as plt
 
@@ -13,16 +12,15 @@ st.write("""### Juan David Fernández, Laura Santos y Julián Uribe""")
 st.write("""### Herramienta interactiva para explorar data de producción fiscalizada de crudo de la ANH""")
 
 
-st.write("""## **Importar archivo**""")
-
-ruta = st.text_input('Ingrese la ruta del archivo:')
+#st.write("""## **Importar archivo**""")
 
 
+ruta = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vQQQt-Rjg2WR5p2lUIyja7uACZznzjR20VbN0HdwNMttYPwLUcoyqUrfd_uutoo7g/pub?gid=1693572178&single=true&output=csv'
 if ruta:
     @st.cache
     def load_data():
 
-        df = pd.read_excel(ruta)
+        df = pd.read_csv(ruta)
         decimals = pd.Series(0, index=[df.columns[5:]])
         df = df.round(decimals)
         return df
@@ -51,10 +49,11 @@ if ruta:
         else:
 
             data_n = data.groupby('Año').sum().sum(axis=1)
-
+            
             if data_n.shape[0]>1:
-                low = data.Año.min()
-                high = data.Año.max()
+                
+                low = int(data_n.index.min())
+                high = int(data_n.index.max())
 
                 st.write('## **Producción Histórica Anual**')
 
